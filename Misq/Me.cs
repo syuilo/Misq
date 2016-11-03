@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Misq
 {
-	public class Me: Entities.User
+	public class Me : Entities.User
 	{
 		/// <summary>
 		/// このユーザーのユーザーキー
@@ -18,7 +18,7 @@ namespace Misq
 			this.Userkey = userkey;
 		}
 
-		public Me(string userkey, dynamic user): base((object)user)
+		public Me(string userkey, dynamic user) : base((object)user)
 		{
 			this.Userkey = userkey;
 		}
@@ -31,7 +31,7 @@ namespace Misq
 		public async Task<dynamic> Request(string endpoint)
 		{
 			return await Core.Request(endpoint, new Dictionary<string, string> {
-				{ "userkey", this.Userkey }
+				{ "_userkey", this.Userkey }
 			});
 		}
 
@@ -43,7 +43,7 @@ namespace Misq
 		/// <returns>レスポンス</returns>
 		public async Task<dynamic> Request(string endpoint, Dictionary<string, string> ps)
 		{
-			ps.Add("userkey", this.Userkey);
+			ps.Add("_userkey", this.Userkey);
 			return await Core.Request(endpoint, ps);
 		}
 
