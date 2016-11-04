@@ -20,6 +20,8 @@ namespace Misq
 		{
 			var client = new HttpClient();
 
+			if (endpoint[0] != '/') endpoint = '/' + endpoint;
+
 			var res = await client.PostAsync(api + endpoint,
 				new FormUrlEncodedContent(ps));
 

@@ -33,7 +33,7 @@ namespace Misq
 		/// <returns>ユーザーが認証を終えたことを通知するハンドラ</returns>
 		public async Task<Func<Task<Me>>> Authorize()
 		{
-			var obj = await this.Request("/auth/session/generate");
+			var obj = await this.Request("auth/session/generate");
 
 			var token = obj.token.Value;
 
@@ -51,7 +51,7 @@ namespace Misq
 
 		private async Task<string> FetchUserkey(string token)
 		{
-			var obj = await this.Request("/auth/session/userkey", new Dictionary<string, string> {
+			var obj = await this.Request("auth/session/userkey", new Dictionary<string, string> {
 				{ "token", token }
 			});
 

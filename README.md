@@ -16,7 +16,7 @@ myAnyUIEvent += async () => {
   var me = await done();
   
   // Let's post a message to Misskey
-  me.Request("/posts/create", new Dictionary<string, string> {
+  me.Request("posts/create", new Dictionary<string, string> {
     { "text", "yee haw!" }
   });
 };
