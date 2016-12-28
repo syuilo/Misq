@@ -36,9 +36,10 @@ namespace Misq
 			var obj = await this.Request("auth/session/generate");
 
 			var token = obj.token.Value;
+			var url = obj.url.Value;
 
 			// 規定のブラウザで表示
-			System.Diagnostics.Process.Start(Core.auth + "/" + token);
+			System.Diagnostics.Process.Start(url);
 
 			return async () =>
 			{
