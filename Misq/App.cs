@@ -43,22 +43,15 @@ namespace Misq
 
 			return async () =>
 			{
-				var uk = await this.FetchUserkey(token);
-				var me = new Me(uk);
-				var data = await me.Request("/i");
-				return new Me(uk, data);
+				var obj2 = await this.Request("auth/session/userkey", new Dictionary<string, string> {
+					{ "token", token }
+				});
+
+				var accessToken = obj2.access_token.Value;
+				var userData = obj2.user.Value;
+
+				return new Me(accessToken, this.Secret, userData);
 			};
-		}
-
-		private async Task<string> FetchUserkey(string token)
-		{
-			var obj = await this.Request("auth/session/userkey", new Dictionary<string, string> {
-				{ "token", token }
-			});
-
-			var userkey = obj.userkey.Value;
-
-			return userkey;
 		}
 
 		/// <summary>

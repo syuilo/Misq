@@ -8,7 +8,6 @@ namespace Misq
 	public static class Core
 	{
 		public const string api = "https://api.misskey.xyz";
-		public const string auth = "https://auth.misskey.xyz";
 
 		/// <summary>
 		/// APIにリクエストします。

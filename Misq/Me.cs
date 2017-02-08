@@ -1,26 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System.Security.Cryptography;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
+using System.Text;
+using System.Linq;
 
 namespace Misq
 {
 	public class Me : Entities.User
 	{
 		/// <summary>
-		/// このユーザーのユーザーキー
+		/// アクセストークン
 		/// </summary>
-		public string Userkey
+		private string Token
 		{
 			get;
 		}
 
-		public Me(string userkey) : base(null)
+		public Me(string userToken, string appSecret) : base(null)
 		{
-			this.Userkey = userkey;
+			this.Token = this.GenerateAccessToken(userToken, appSecret);
 		}
 
-		public Me(string userkey, dynamic user) : base((object)user)
+		public Me(string userToken, string appSecret, dynamic user) : base((object)user)
 		{
-			this.Userkey = userkey;
+			this.Token = this.GenerateAccessToken(userToken, appSecret);
+		}
+
+		private string GenerateAccessToken(string userToken, string appSecret)
+		{
+			using (var hash = SHA256Managed.Create())
+			{
+				return String.Concat(hash
+					.ComputeHash(Encoding.UTF8.GetBytes(userToken + appSecret))
+					.Select(item => item.ToString("x2")));
+			}
 		}
 
 		/// <summary>
@@ -31,7 +45,7 @@ namespace Misq
 		public async Task<dynamic> Request(string endpoint)
 		{
 			return await Core.Request(endpoint, new Dictionary<string, string> {
-				{ "_userkey", this.Userkey }
+				{ "i", this.Token }
 			});
 		}
 
@@ -43,7 +57,7 @@ namespace Misq
 		/// <returns>レスポンス</returns>
 		public async Task<dynamic> Request(string endpoint, Dictionary<string, string> ps)
 		{
-			ps.Add("_userkey", this.Userkey);
+			ps.Add("i", this.Token);
 			return await Core.Request(endpoint, ps);
 		}
 
