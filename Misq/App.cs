@@ -62,7 +62,7 @@ namespace Misq
 		public async Task<dynamic> Request(string endpoint)
 		{
 			return await Core.Request(endpoint, new Dictionary<string, string> {
-				{ "app_secret", this.Secret }
+				{ "appSecret", this.Secret }
 			});
 		}
 
@@ -74,7 +74,7 @@ namespace Misq
 		/// <returns>レスポンス</returns>
 		public async Task<dynamic> Request(string endpoint, Dictionary<string, string> ps)
 		{
-			ps.Add("app_secret", this.Secret);
+			ps.Add("appSecret", this.Secret);
 			return await Core.Request(endpoint, ps);
 		}
 
