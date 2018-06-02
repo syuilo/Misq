@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Misq
@@ -20,8 +21,10 @@ namespace Misq
 
 			var ep = $"{host}/api/{endpoint}";
 
-			var res = await client.PostAsync(ep,
-				new FormUrlEncodedContent(ps));
+			var content = new StringContent(JsonConvert.SerializeObject(ps),
+				Encoding.UTF8, "application/json");
+
+			var res = await client.PostAsync(ep, content);
 
 			var obj = JsonConvert.DeserializeObject<dynamic>(
 				await res.Content.ReadAsStringAsync());

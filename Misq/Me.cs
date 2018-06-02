@@ -47,7 +47,7 @@ namespace Misq
 			this.Token = this.GenerateAccessToken(userToken, appSecret);
 		}
 
-		private string GenerateAccessToken(string userToken, string appSecret)
+		public string GenerateAccessToken(string userToken, string appSecret)
 		{
 			using (var hash = SHA256Managed.Create())
 			{

@@ -58,7 +58,7 @@ namespace Misq
 					{ "token", token }
 				});
 
-				var accessToken = obj2.access_token.Value;
+				var accessToken = obj2.accessToken.Value;
 				var userData = obj2.user;
 
 				return new Me(this.Host, accessToken, this.Secret, userData);
