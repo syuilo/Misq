@@ -17,13 +17,33 @@ namespace Misq
 			get;
 		}
 
-		public Me(string userToken, string appSecret) : base(null)
+		/// <summary>
+		/// ユーザートークン
+		/// </summary>
+		public string UserToken
 		{
+			get;
+		}
+
+		/// <summary>
+		/// インスタンスURL
+		/// </summary>
+		public string Host
+		{
+			get;
+		}
+
+		public Me(string Host, string userToken, string appSecret) : base(null)
+		{
+			this.Host = Host;
+			this.UserToken = userToken;
 			this.Token = this.GenerateAccessToken(userToken, appSecret);
 		}
 
-		public Me(string userToken, string appSecret, dynamic user) : base((object)user)
+		public Me(string Host, string userToken, string appSecret, dynamic user) : base((object)user)
 		{
+			this.Host = Host;
+			this.UserToken = userToken;
 			this.Token = this.GenerateAccessToken(userToken, appSecret);
 		}
 
@@ -44,7 +64,7 @@ namespace Misq
 		/// <returns>レスポンス</returns>
 		public async Task<dynamic> Request(string endpoint)
 		{
-			return await Core.Request(endpoint, new Dictionary<string, string> {
+			return await Core.Request(this.Host, endpoint, new Dictionary<string, string> {
 				{ "i", this.Token }
 			});
 		}
@@ -58,7 +78,7 @@ namespace Misq
 		public async Task<dynamic> Request(string endpoint, Dictionary<string, string> ps)
 		{
 			ps.Add("i", this.Token);
-			return await Core.Request(endpoint, ps);
+			return await Core.Request(this.Host, endpoint, ps);
 		}
 
 	}

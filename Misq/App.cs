@@ -10,6 +10,15 @@ namespace Misq
 	public class App
 	{
 		/// <summary>
+		/// アプリケーションの属するインスタンスURLを取得または設定します。
+		/// </summary>
+		public string Host
+		{
+			get;
+			set;
+		}
+	
+		/// <summary>
 		/// アプリケーションのシークレット・キーを取得または設定します。
 		/// </summary>
 		public string Secret
@@ -21,9 +30,11 @@ namespace Misq
 		/// <summary>
 		/// Appインスタンスを初期化します。
 		/// </summary>
+		/// <param name="host">アプリケーションの属するインスタンスURL</param>
 		/// <param name="secret">アプリケーションのシークレットキー</param>
-		public App(string secret)
+		public App(string host, string secret)
 		{
+			this.Host = host;
 			this.Secret = secret;
 		}
 
@@ -50,7 +61,7 @@ namespace Misq
 				var accessToken = obj2.access_token.Value;
 				var userData = obj2.user;
 
-				return new Me(accessToken, this.Secret, userData);
+				return new Me(this.Host, accessToken, this.Secret, userData);
 			};
 		}
 
@@ -61,7 +72,7 @@ namespace Misq
 		/// <returns>レスポンス</returns>
 		public async Task<dynamic> Request(string endpoint)
 		{
-			return await Core.Request(endpoint, new Dictionary<string, string> {
+			return await Core.Request(this.Host, endpoint, new Dictionary<string, string> {
 				{ "appSecret", this.Secret }
 			});
 		}
@@ -75,7 +86,7 @@ namespace Misq
 		public async Task<dynamic> Request(string endpoint, Dictionary<string, string> ps)
 		{
 			ps.Add("appSecret", this.Secret);
-			return await Core.Request(endpoint, ps);
+			return await Core.Request(this.Host, endpoint, ps);
 		}
 
 
