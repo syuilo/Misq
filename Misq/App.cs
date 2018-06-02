@@ -54,7 +54,7 @@ namespace Misq
 
 			return async () =>
 			{
-				var obj2 = await this.Request("auth/session/userkey", new Dictionary<string, string> {
+				var obj2 = await this.Request("auth/session/userkey", new Dictionary<string, object> {
 					{ "token", token }
 				});
 
@@ -72,7 +72,7 @@ namespace Misq
 		/// <returns>レスポンス</returns>
 		public async Task<dynamic> Request(string endpoint)
 		{
-			return await Core.Request(this.Host, endpoint, new Dictionary<string, string> {
+			return await Core.Request(this.Host, endpoint, new Dictionary<string, object> {
 				{ "appSecret", this.Secret }
 			});
 		}
@@ -83,7 +83,7 @@ namespace Misq
 		/// <param name="endpoint">エンドポイント名</param>
 		/// <param name="ps">パラメーター</param>
 		/// <returns>レスポンス</returns>
-		public async Task<dynamic> Request(string endpoint, Dictionary<string, string> ps)
+		public async Task<dynamic> Request(string endpoint, Dictionary<string, object> ps)
 		{
 			ps.Add("appSecret", this.Secret);
 			return await Core.Request(this.Host, endpoint, ps);

@@ -15,7 +15,7 @@ namespace Misq
 		/// <param name="endpoint">エンドポイント名</param>
 		/// <param name="ps">パラメーター</param>
 		/// <returns>レスポンス</returns>
-		public static async Task<dynamic> Request(string host, string endpoint, Dictionary<string, string> ps)
+		public static async Task<dynamic> Request(string host, string endpoint, Dictionary<string, object> ps)
 		{
 			var client = new HttpClient();
 
