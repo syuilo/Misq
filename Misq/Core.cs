@@ -31,5 +31,26 @@ namespace Misq
 
 			return obj;
 		}
+
+		/// <summary>
+		/// APIにリクエストします。
+		/// </summary>
+		/// <param name="host">MisskeyインスタンスのURL</param>
+		/// <param name="endpoint">エンドポイント名</param>
+		/// <param name="ps">パラメーター</param>
+		/// <returns>レスポンス</returns>
+		public static async Task<dynamic> RequestWithBinary(string host, string endpoint, MultipartFormDataContent ps)
+		{
+			var client = new HttpClient();
+
+			var ep = $"{host}/api/{endpoint}";
+
+			var res = await client.PostAsync(ep, ps);
+
+			var obj = JsonConvert.DeserializeObject<dynamic>(
+				await res.Content.ReadAsStringAsync());
+
+			return obj;
+		}
 	}
 }
