@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>Misq</id>
+		<version>3.0.0</version>
+		<authors>syuilo</authors>
+		<owners>syuilo</owners>
+		<projectUrl>https://github.com/syuilo/Misq</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Misskey library</description>
+		<releaseNotes>Yo</releaseNotes>
+		<copyright>Copyright (c) syuilo 2018</copyright>
+		<tags>Misskey</tags>
+		<dependencies>
+			<dependency id="Newtonsoft.Json" version="11.0.2" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\Release\*.*" target="lib\net461" />
+	</files>
+</package>
