@@ -41,8 +41,8 @@ namespace Misq
 		/// <summary>
 		/// 認証セッションを開始し、フォームを既定のブラウザーで表示します。
 		/// </summary>
-		/// <returns>ユーザーが認証を終えたことを通知するハンドラ</returns>
-		public async Task<Func<Task<Me>>> Authorize()
+		/// <returns>ユーザー</returns>
+		public async Task<Me> Authorize()
 		{
 			var obj = await this.Request("auth/session/generate");
 
@@ -52,17 +52,26 @@ namespace Misq
 			// 規定のブラウザで表示
 			System.Diagnostics.Process.Start(url);
 
-			return async () =>
-			{
-				var obj2 = await this.Request("auth/session/userkey", new Dictionary<string, object> {
+			Func<Task<dynamic>> check = async () => {
+				var a = await this.Request("auth/session/userkey", new Dictionary<string, object> {
 					{ "token", token }
 				});
 
-				var accessToken = obj2.accessToken.Value;
-				var userData = obj2.user;
-
-				return new Me(this.Host, accessToken, this.Secret, userData);
+				return a.accessToken != null ? a : null;
 			};
+
+			dynamic x = null;
+
+			while (x == null)
+			{
+				x = await check();
+				await Task.Delay(1000);
+			}
+
+			var accessToken = x.accessToken.Value;
+			var userData = x.user;
+
+			return new Me(this.Host, accessToken, this.Secret, userData);
 		}
 
 		/// <summary>
