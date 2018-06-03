@@ -6,9 +6,8 @@ available on nuget
 
 ## Usage
 
-### 理想
 ``` Csharp
-var app = new Misq.App("your app's secret key here");
+var app = new Misq.App("https://misskey.xyz", "your app's secret key here");
 
 // Authorize user
 var user = await app.Authorize();
@@ -17,22 +16,4 @@ var user = await app.Authorize();
 user.Request("posts/create", new Dictionary<string, object> {
   { "text", "yee haw!" }
 });
-```
-
-### 現状
-``` Csharp
-var app = new Misq.App("your app's secret key here");
-
-// Begin authorize session
-var done = await app.Authorize();
-
-myAnyUIEvent += async () => {
-  // Get authorized user
-  var me = await done();
-  
-  // Let's post a message to Misskey
-  me.Request("posts/create", new Dictionary<string, object> {
-    { "text", "yee haw!" }
-  });
-};
 ```
