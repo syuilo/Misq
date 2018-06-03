@@ -2,7 +2,7 @@
 .NET Misskey liblary
 
 ## Install
-nuget coming soon
+available on nuget
 
 ## Usage
 
@@ -14,7 +14,7 @@ var app = new Misq.App("your app's secret key here");
 var user = await app.Authorize();
 
 // Let's post a message to Misskey
-user.Request("posts/create", new Dictionary<string, string> {
+user.Request("posts/create", new Dictionary<string, object> {
   { "text", "yee haw!" }
 });
 ```
@@ -31,7 +31,7 @@ myAnyUIEvent += async () => {
   var me = await done();
   
   // Let's post a message to Misskey
-  me.Request("posts/create", new Dictionary<string, string> {
+  me.Request("posts/create", new Dictionary<string, object> {
     { "text", "yee haw!" }
   });
 };
