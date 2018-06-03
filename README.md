@@ -13,7 +13,7 @@ var app = new Misq.App("https://misskey.xyz", "your app's secret key here");
 var user = await app.Authorize();
 
 // Let's post a message to Misskey
-user.Request("posts/create", new Dictionary<string, object> {
+user.Request("notes/create", new Dictionary<string, object> {
   { "text", "yee haw!" }
 });
 ```
