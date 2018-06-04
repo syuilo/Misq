@@ -1,5 +1,5 @@
 # Misq
-.NET Misskey liblary
+Misq is an official .NET Misskey library.
 
 ## Install
 available on nuget
