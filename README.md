@@ -7,6 +7,7 @@ available on nuget
 ## Usage
 
 ``` Csharp
+// Create your app instance
 var app = new Misq.App("https://misskey.xyz", "your app's secret key here");
 
 // Authorize user
