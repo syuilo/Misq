@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Misq
 {
 	public static class Core
 	{
+		static Lazy<HttpClient> _client = new Lazy<HttpClient>();
 		/// <summary>
 		/// APIにリクエストします。
 		/// </summary>
@@ -17,7 +19,7 @@ namespace Misq
 		/// <returns>レスポンス</returns>
 		public static async Task<dynamic> Request(string host, string endpoint, Dictionary<string, object> ps)
 		{
-			var client = new HttpClient();
+			var client = _client.Value;
 
 			var ep = $"{host}/api/{endpoint}";
 
@@ -41,7 +43,7 @@ namespace Misq
 		/// <returns>レスポンス</returns>
 		public static async Task<dynamic> RequestWithBinary(string host, string endpoint, MultipartFormDataContent ps)
 		{
-			var client = new HttpClient();
+			var client = _client.Value;
 
 			var ep = $"{host}/api/{endpoint}";
 
