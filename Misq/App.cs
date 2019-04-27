@@ -98,6 +98,25 @@ namespace Misq
 			return await Core.Request(this.Host, endpoint, ps);
 		}
 
+		/// <summary>
+		/// Misskeyアプリを登録します。
+		/// </summary>
+		/// <param name="host">アプリの属するインスタンスURL</param>
+		/// <param name="appName">アプリの名前</param>
+		/// <param name="appDescription">アプリの説明文</param>
+		/// <param name="permissions">アプリから利用可能な権限</param>
+		/// <returns>登録されたアプリ</returns>
+		public static async Task<App> Register(string host, string appName, string appDescription, IEnumerable<string> permissions)
+		{
+			var ps = new Dictionary<string, object>
+			{
+				["name"] = appName,
+				["description"] = appDescription,
+				["permission"] = permissions
+			};
+			var app = await Core.Request(host, "app/create", ps);
 
+			return new App(host, app.secret.Value);
+		}
 	}
 }
