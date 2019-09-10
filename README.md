@@ -8,7 +8,7 @@ available on nuget
 
 ``` Csharp
 // Create your app instance
-var app = new Misq.App("https://misskey.xyz", "your app's secret key here");
+var app = new Misq.App("https://misskey.io", "your app's secret key here");
 
 // Authorize user
 var user = await app.Authorize();
