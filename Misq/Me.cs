@@ -34,6 +34,19 @@ namespace Misq
 			get;
 		}
 
+		public Me(string Host, string accessToken) : base(null)
+		{
+			this.Host = Host;
+			this.UserToken = "";
+			this.Token = accessToken;
+		}
+		public Me(string Host, string accessToken, dynamic user) : base((object)user)
+		{
+			this.Host = Host;
+			this.UserToken = "";
+			this.Token = accessToken;
+		}
+
 		public Me(string Host, string userToken, string appSecret) : base(null)
 		{
 			this.Host = Host;

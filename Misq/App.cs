@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Misq
 {
@@ -28,7 +31,17 @@ namespace Misq
 		}
 
 		/// <summary>
-		/// Appインスタンスを初期化します。
+		/// アプリケーションのセッションIDを取得または設定します。
+		/// </summary>
+		public string SessionID 
+		{
+			get;
+			set;
+		}
+
+
+		/// <summary>
+		/// シークレットキーを使ってAppインスタンスを初期化します。
 		/// </summary>
 		/// <param name="host">アプリケーションの属するインスタンスURL</param>
 		/// <param name="secret">アプリケーションのシークレットキー</param>
@@ -36,10 +49,22 @@ namespace Misq
 		{
 			this.Host = host;
 			this.Secret = secret;
+			this.SessionID = null;
 		}
 
 		/// <summary>
-		/// 認証セッションを開始し、フォームを既定のブラウザーで表示します。
+		/// MiAuthを使ってAppインスタンスを初期化します。
+		/// </summary>
+		/// <param name="host">アプリケーションの属するインスタンスURL</param>
+		public App(string host)
+		{
+			this.Host = host;
+			this.SessionID = Guid.NewGuid().ToString();
+			this.Secret = null;
+		}
+
+		/// <summary>
+		/// シークレットキーを使って認証セッションを開始し、フォームを既定のブラウザーで表示します。
 		/// </summary>
 		/// <returns>ユーザー</returns>
 		public async Task<Me> Authorize()
@@ -50,7 +75,9 @@ namespace Misq
 			var url = obj.url.Value;
 
 			// 規定のブラウザで表示
-			System.Diagnostics.Process.Start(url);
+			var info = new ProcessStartInfo(url);
+			info.UseShellExecute = true;
+			System.Diagnostics.Process.Start(info);
 
 			Func<Task<dynamic>> check = async () => {
 				var a = await this.Request("auth/session/userkey", new Dictionary<string, object> {
@@ -68,10 +95,51 @@ namespace Misq
 				await Task.Delay(1000);
 			}
 
-			var accessToken = x.accessToken.Value;
+			var accessToken = x.accessToken.Value as string;
 			var userData = x.user;
 
 			return new Me(this.Host, accessToken, this.Secret, userData);
+		}
+		/// <summary>
+		/// MiAuthを使って認証セッションを開始し、フォームを既定のブラウザーで表示します。
+		/// </summary>
+		/// <param name="appName">アプリの名前</param>
+		/// <param name="permissions">アプリから利用可能な権限</param>
+		/// <returns>ユーザー</returns>
+		public async Task<Me> Authorize(string appName, IEnumerable<string> permissions)
+		{
+			// URLを作成
+			var permissions_str = String.Join(",", permissions);
+			HttpUtility.UrlEncode($"name={appName}&permission={permissions_str}");
+			var name_query = HttpUtility.UrlEncode(appName);
+			var parmissons_query = HttpUtility.UrlEncode(permissions_str);
+			var url = $"{Host}/miauth/{SessionID}?name={name_query}&permission={parmissons_query}";
+
+			// 規定のブラウザで表示
+			var info = new ProcessStartInfo(url);
+			info.UseShellExecute = true;
+			System.Diagnostics.Process.Start(info);
+
+			// ユーザーの認証を待つ
+			Func<Task<dynamic>> check = async () =>
+			{
+				var a = await this.Request(
+					$"miauth/{SessionID}/check", new Dictionary<string, object>());
+				return a.token != null ? a : null;
+			};
+
+			dynamic x = null;
+
+			while (x == null) {
+				x = await check();
+				await Task.Delay(1000);
+			}
+
+			// 取得したデータをMeにして返す
+			var accessToken = x.token.Value as string;
+			var userData = x.user;
+
+			return new Me(this.Host, accessToken, userData);
 		}
 
 		/// <summary>
